@@ -287,6 +287,12 @@ await runBot({
     }
 
     // Entries: one fixed stake, only on a fresh signal, only into a free slot.
+    // Slots come from hello.caps: max_open_positions is 5, and
+    // committedPositionCount counts held positions plus buys still pending, so
+    // slotsLeft is the room the harness itself would allow. Strategy entries
+    // stop one slot earlier (open.size >= MAX_MAIN_POSITIONS, i.e. 4), so the
+    // fifth slot stays free for a pacing probe; strategy + probe together can
+    // never exceed the hello cap of 5 open positions.
     let free = Number(state.freeCashLamports()) / SOL;
     let slotsLeft = caps.max_open_positions - state.committedPositionCount();
     let exposure = 0;
